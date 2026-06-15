@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>АвтоКаталог | Универсалы + Купе | Копирование без смайликов</title>
+    <title>АвтоКаталог | Страна производитель (3 буквы) + расшифровка слева</title>
     
-    <!-- ФАВИКОН (иконка вкладки) - увеличенная машинка -->
+    <!-- ФАВИКОН -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e3b4a'/%3E%3Ctext x='50' y='78' font-size='72' text-anchor='middle' fill='%23ffbe5e' font-weight='bold'%3E🚗%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e3b4a'/%3E%3Ctext x='50' y='78' font-size='72' text-anchor='middle' fill='%23ffbe5e' font-weight='bold'%3E🚗%3C/text%3E%3C/svg%3E">
     
     <style>
         * {
@@ -22,9 +21,80 @@
             padding: 1.8rem 1.5rem 3rem;
         }
 
-        .container {
-            max-width: 1400px;
+        /* ГЛАВНЫЙ КОНТЕЙНЕР С ДВУМЯ КОЛОНКАМИ */
+        .main-layout {
+            display: flex;
+            gap: 2rem;
+            max-width: 1600px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        /* ЛЕВАЯ ПАНЕЛЬ — РАСШИФРОВКА СТРАН */
+        .legend-panel {
+            width: 260px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 245, 210, 0.8);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .legend-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f3a48;
+            border-bottom: 2px solid #ffbe5e;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-title span {
+            font-size: 1.4rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.6rem 0;
+            border-bottom: 1px dashed rgba(0,0,0,0.08);
+            font-size: 0.9rem;
+        }
+        .legend-code {
+            background: #2c3e50;
+            color: #ffd966;
+            font-weight: bold;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            min-width: 48px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .legend-country {
+            color: #2c4a62;
+            font-weight: 500;
+        }
+        .legend-flag {
+            font-size: 1.2rem;
+        }
+
+        /* ПРАВАЯ ЧАСТЬ — ОСНОВНОЙ КОНТЕНТ */
+        .right-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .container {
+            width: 100%;
         }
 
         .hero {
@@ -37,6 +107,11 @@
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
+        }
+        .hero p {
+            color: #2c4a62;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
         .categories-toolbar {
@@ -51,8 +126,6 @@
             gap: 0.8rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(255, 245, 210, 0.8);
-            position: relative;
-            z-index: 10;
         }
 
         .category-filter-btn {
@@ -65,18 +138,14 @@
             color: #1f3a48;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
-        .category-filter-btn span {
-            font-size: 1.2rem;
-        }
+        .category-filter-btn span { font-size: 1.2rem; }
         .category-filter-btn:hover {
             background: #fff3e0;
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
         .category-filter-btn.active {
             background: linear-gradient(115deg, #1e3b4a, #14303e);
@@ -84,15 +153,8 @@
             border-color: #ffbe5e;
         }
 
-        .category-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .segment-section {
-            margin-bottom: 0.5rem;
-        }
+        .category-grid { display: flex; flex-direction: column; gap: 2rem; }
+        .segment-section { margin-bottom: 0.5rem; }
         .segment-title {
             display: flex;
             align-items: baseline;
@@ -101,34 +163,10 @@
             padding-left: 0.5rem;
             flex-wrap: wrap;
         }
-        .segment-title h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        .russia-tag {
-            background: linear-gradient(120deg, #1f6392, #0d4b6e);
-            color: white;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .mass-tag {
-            background: #2c5f8a;
-            color: white;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .premium-tag {
-            background: linear-gradient(120deg, #c9a03d, #b8860b);
-            color: #1e1a0c;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
+        .segment-title h3 { font-size: 1.5rem; font-weight: 700; }
+        .russia-tag { background: linear-gradient(120deg, #1f6392, #0d4b6e); color: white; padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.8rem; font-weight: bold; }
+        .mass-tag { background: #2c5f8a; color: white; padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.8rem; font-weight: bold; }
+        .premium-tag { background: linear-gradient(120deg, #c9a03d, #b8860b); color: #1e1a0c; padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.8rem; font-weight: bold; }
 
         .category-card {
             background: rgba(255,255,255,0.85);
@@ -140,9 +178,7 @@
             transition: transform 0.2s;
             border: 1px solid rgba(255,255,240,0.7);
         }
-        .category-card:hover {
-            transform: translateY(-3px);
-        }
+        .category-card:hover { transform: translateY(-3px); }
 
         .category-card.russia-card {
             background: linear-gradient(135deg, rgba(240,248,255,0.95), rgba(220,240,255,0.9));
@@ -178,9 +214,7 @@
             align-items: center;
             gap: 12px;
         }
-        .category-header h2 span {
-            font-size: 1.7rem;
-        }
+        .category-header h2 span { font-size: 1.7rem; }
 
         .buttons-container {
             padding: 1.5rem 1.8rem 1.8rem;
@@ -189,6 +223,7 @@
             gap: 0.9rem;
         }
 
+        /* СТАНДАРТНАЯ КНОПКА */
         .car-btn {
             background: linear-gradient(110deg, #ffffff, #fafcff);
             border: none;
@@ -202,42 +237,68 @@
             box-shadow: 0 5px 12px rgba(0,0,0,0.06);
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             border: 1px solid rgba(255,255,245,0.9);
         }
 
-        .car-btn[data-brand="lada"]::before { content: "🇷🇺"; }
-        .car-btn[data-brand="hyundai"]::before { content: "🌊"; }
-        .car-btn[data-brand="kia"]::before { content: "⭐"; }
-        .car-btn[data-brand="geely"]::before { content: "🐉"; }
-        .car-btn[data-brand="nio"]::before { content: "⚡"; }
-        .car-btn[data-brand="ford"]::before { content: "🦅"; }
-        .car-btn[data-brand="jeep"]::before { content: "🏔️"; }
-        .car-btn[data-brand="bmw"]::before { content: "🔷"; }
-        .car-btn[data-brand="vw"]::before { content: "🐞"; }
-        .car-btn[data-brand="audi"]::before { content: "🔗"; }
-        .car-btn[data-brand="toyota"]::before { content: "🌍"; }
-        .car-btn[data-brand="honda"]::before { content: "🏁"; }
-        .car-btn[data-brand="nissan"]::before { content: "🌊"; }
-        .car-btn[data-brand="suzuki"]::before { content: "🌀"; }
-        .car-btn[data-brand="mazda"]::before { content: "🌀"; }
-        .car-btn[data-brand="mitsubishi"]::before { content: "🔺"; }
-        .car-btn[data-brand="renault"]::before { content: "💎"; }
-        .car-btn[data-brand="peugeot"]::before { content: "🦁"; }
-        .car-btn[data-brand="citroen"]::before { content: "🧩"; }
-        .car-btn[data-brand="fiat"]::before { content: "🍕"; }
-        .car-btn[data-brand="skoda"]::before { content: "🪶"; }
-        .car-btn[data-brand="volvo"]::before { content: "🔰"; }
-        .car-btn[data-brand="baic"]::before { content: "🌐"; }
+        /* Бейдж с кодом страны (3 буквы) */
+        .country-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #2c3e50;
+            color: #ffd966;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            margin-left: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        /* КРАСНАЯ КНОПКА ДЛЯ ОТСУТСТВУЮЩИХ МОДЕЛЕЙ LADA */
+        .car-btn.missing-lada {
+            background: linear-gradient(110deg, #ffe0e0, #ffc0c0);
+            color: #8b0000;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 8px rgba(255,0,0,0.3);
+        }
+        .car-btn.missing-lada:hover {
+            background: linear-gradient(110deg, #ffb8b8, #ffa0a0);
+        }
+
+        /* Иконки брендов (флаги) */
+        .car-btn[data-brand="lada"]::before { content: "🇷🇺"; margin-right: 4px; }
+        .car-btn[data-brand="hyundai"]::before { content: "🇰🇷"; margin-right: 4px; }
+        .car-btn[data-brand="kia"]::before { content: "🇰🇷"; margin-right: 4px; }
+        .car-btn[data-brand="geely"]::before { content: "🇨🇳"; margin-right: 4px; }
+        .car-btn[data-brand="nio"]::before { content: "🇨🇳"; margin-right: 4px; }
+        .car-btn[data-brand="ford"]::before { content: "🇺🇸"; margin-right: 4px; }
+        .car-btn[data-brand="jeep"]::before { content: "🇺🇸"; margin-right: 4px; }
+        .car-btn[data-brand="bmw"]::before { content: "🇩🇪"; margin-right: 4px; }
+        .car-btn[data-brand="vw"]::before { content: "🇩🇪"; margin-right: 4px; }
+        .car-btn[data-brand="audi"]::before { content: "🇩🇪"; margin-right: 4px; }
+        .car-btn[data-brand="mercedes"]::before { content: "🇩🇪"; margin-right: 4px; }
+        .car-btn[data-brand="toyota"]::before { content: "🇯🇵"; margin-right: 4px; }
+        .car-btn[data-brand="honda"]::before { content: "🇯🇵"; margin-right: 4px; }
+        .car-btn[data-brand="nissan"]::before { content: "🇯🇵"; margin-right: 4px; }
+        .car-btn[data-brand="suzuki"]::before { content: "🇯🇵"; margin-right: 4px; }
+        .car-btn[data-brand="mazda"]::before { content: "🇯🇵"; margin-right: 4px; }
+        .car-btn[data-brand="mitsubishi"]::before { content: "🇯🇵"; margin-right: 4px; }
+        .car-btn[data-brand="subaru"]::before { content: "🇯🇵"; margin-right: 4px; }
+        .car-btn[data-brand="renault"]::before { content: "🇫🇷"; margin-right: 4px; }
+        .car-btn[data-brand="peugeot"]::before { content: "🇫🇷"; margin-right: 4px; }
+        .car-btn[data-brand="citroen"]::before { content: "🇫🇷"; margin-right: 4px; }
+        .car-btn[data-brand="fiat"]::before { content: "🇮🇹"; margin-right: 4px; }
+        .car-btn[data-brand="skoda"]::before { content: "🇨🇿"; margin-right: 4px; }
+        .car-btn[data-brand="volvo"]::before { content: "🇸🇪"; margin-right: 4px; }
+        .car-btn[data-brand="baic"]::before { content: "🇨🇳"; margin-right: 4px; }
 
         .car-btn:hover {
-            background: linear-gradient(110deg, #fff3e2, #ffe8d4);
             transform: scale(1.02);
             border-color: #f3bc6c;
         }
-        .car-btn:active {
-            transform: scale(0.97);
-        }
+        .car-btn:active { transform: scale(0.97); }
 
         .copy-toast {
             position: fixed;
@@ -259,10 +320,7 @@
             pointer-events: none;
             white-space: nowrap;
         }
-        .copy-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
+        .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         .footer-note {
             text-align: center;
@@ -273,23 +331,115 @@
             padding-top: 1.5rem;
         }
 
+        @media (max-width: 900px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .legend-panel {
+                width: 100%;
+                position: static;
+                margin-bottom: 1.5rem;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .legend-title {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            .legend-item {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+
         @media (max-width: 680px) {
-            .copy-toast { white-space: normal; width: 85%; text-align: center; font-size: 0.85rem; }
+            .copy-toast { white-space: normal; width: 85%; text-align: center; }
             .buttons-container { padding: 1rem; gap: 0.7rem; }
             .car-btn { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
-            .category-filter-btn { padding: 0.45rem 1rem; font-size: 0.85rem; }
+            .country-badge { font-size: 0.6rem; padding: 0.1rem 0.4rem; }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="hero">
-        <h1>🚗 АвтоКаталог</h1>
+<div class="main-layout">
+    <!-- ЛЕВАЯ ПАНЕЛЬ: РАСШИФРОВКА СТРАН -->
+    <div class="legend-panel">
+        <div class="legend-title">
+            <span>🌍</span> Коды стран
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">RUS</span>
+            <span class="legend-flag">🇷🇺</span>
+            <span class="legend-country">Россия</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">KOR</span>
+            <span class="legend-flag">🇰🇷</span>
+            <span class="legend-country">Южная Корея</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">JPN</span>
+            <span class="legend-flag">🇯🇵</span>
+            <span class="legend-country">Япония</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">DEU</span>
+            <span class="legend-flag">🇩🇪</span>
+            <span class="legend-country">Германия</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">USA</span>
+            <span class="legend-flag">🇺🇸</span>
+            <span class="legend-country">США</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">FRA</span>
+            <span class="legend-flag">🇫🇷</span>
+            <span class="legend-country">Франция</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">CHN</span>
+            <span class="legend-flag">🇨🇳</span>
+            <span class="legend-country">Китай</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">SWE</span>
+            <span class="legend-flag">🇸🇪</span>
+            <span class="legend-country">Швеция</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">ITA</span>
+            <span class="legend-flag">🇮🇹</span>
+            <span class="legend-country">Италия</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">CZE</span>
+            <span class="legend-flag">🇨🇿</span>
+            <span class="legend-country">Чехия</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-code">GBR</span>
+            <span class="legend-flag">🇬🇧</span>
+            <span class="legend-country">Великобритания</span>
+        </div>
     </div>
 
-    <div class="categories-toolbar" id="categoryToolbar"></div>
-    <div class="category-grid" id="dynamicGrid"></div>
-    <div class="footer-note">✓ Клик по автомобилю → копирование: «Марка Модель» (без смайликов)</div>
+    <!-- ПРАВАЯ ЧАСТЬ: ОСНОВНОЙ КОНТЕНТ -->
+    <div class="right-content">
+        <div class="container">
+            <div class="hero">
+                <h1>🚗 АвтоКаталог</h1>
+                <p>Код страны (3 буквы) внутри кнопки · Слева — расшифровка</p>
+            </div>
+
+            <div class="categories-toolbar" id="categoryToolbar"></div>
+            <div class="category-grid" id="dynamicGrid"></div>
+            <div class="footer-note">✓ Клик по автомобилю → копирование: «Марка Модель» (без смайликов)</div>
+        </div>
+    </div>
 </div>
 
 <div id="copyToast" class="copy-toast">✓ Скопировано:</div>
@@ -318,14 +468,74 @@
         }
     }
 
+    // Функция получения трёхбуквенного кода страны по бренду
+    function getCountryCode(brand) {
+        const map = {
+            'lada': 'RUS',
+            'LADA': 'RUS',
+            'hyundai': 'KOR',
+            'kia': 'KOR',
+            'geely': 'CHN',
+            'nio': 'CHN',
+            'baic': 'CHN',
+            'ford': 'USA',
+            'jeep': 'USA',
+            'bmw': 'DEU',
+            'vw': 'DEU',
+            'audi': 'DEU',
+            'mercedes': 'DEU',
+            'toyota': 'JPN',
+            'honda': 'JPN',
+            'nissan': 'JPN',
+            'suzuki': 'JPN',
+            'mazda': 'JPN',
+            'mitsubishi': 'JPN',
+            'subaru': 'JPN',
+            'renault': 'FRA',
+            'peugeot': 'FRA',
+            'citroen': 'FRA',
+            'fiat': 'ITA',
+            'skoda': 'CZE',
+            'volvo': 'SWE',
+            'opel': 'DEU',
+            'jaguar': 'GBR',
+            'land rover': 'GBR'
+        };
+        return map[brand.toLowerCase()] || '???';
+    }
+
+    // СПИСОК МОДЕЛЕЙ LADA, КОТОРЫЕ ОТСУТСТВУЮТ В КАТАЛОГЕ (БУДУТ КРАСНЫМИ)
+    const missingLadaModels = new Set([
+        "1111 Ока", "ВАЗ 2101", "ВАЗ 2103", "ВАЗ 2104", "ВАЗ 2105", "ВАЗ 2106", "ВАЗ 2107",
+        "ВАЗ 2108", "ВАЗ 2109", "ВАЗ 201099", "ВАЗ 2110", "ВАЗ 2111", "ВАЗ 2112", "ВАЗ 2113",
+        "ВАЗ 2114", "ВАЗ 2123", "ВАЗ 2115", "ВАЗ 2120", "LARGUS(если фургон)", "ВАЗ 2129",
+        "ВАЗ 2328", "ВАЗ 2329", "El Lada", "X-Cross 5", "Priora", "ВИС", "ВАЗ 2102"
+    ]);
+
     const categoriesData = [
         {
             id: "sedan",
             name: "Седан",
             icon: "🚘",
             russia: [
-                { brand: "LADA", model: "Vesta" },
-                { brand: "LADA", model: "Granta" }
+                { brand: "LADA", model: "Vesta", isMissing: false },
+                { brand: "LADA", model: "Granta", isMissing: false },
+                { brand: "LADA", model: "1111 Ока", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2101", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2103", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2104", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2105", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2106", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2107", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2110", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2111", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2112", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2113", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2114", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2115", isMissing: true },
+                { brand: "LADA", model: "Priora", isMissing: true },
+                { brand: "LADA", model: "El Lada", isMissing: true },
+                { brand: "LADA", model: "X-Cross 5", isMissing: true }
             ],
             mass: [
                 { brand: "Hyundai", model: "Sonata" }, { brand: "Kia", model: "K5" },
@@ -333,8 +543,7 @@
                 { brand: "Nissan", model: "Altima" }, { brand: "Mazda", model: "6" },
                 { brand: "Volkswagen", model: "Passat" }, { brand: "Skoda", model: "Octavia" },
                 { brand: "Ford", model: "Mondeo" }, { brand: "Geely", model: "Emgrand" },
-                { brand: "BAIC", model: "U5 Plus" }, { brand: "Renault", model: "Logan" },
-                { brand: "Citroen", model: "C5 X" }
+                { brand: "BAIC", model: "U5 Plus" }, { brand: "Renault", model: "Logan" }
             ],
             premium: [
                 { brand: "BMW", model: "3 Series" }, { brand: "Audi", model: "A4" },
@@ -346,7 +555,18 @@
             name: "Хетчбэк",
             icon: "🚙",
             russia: [
-                { brand: "LADA", model: "Granta Hatchback" }, { brand: "LADA", model: "XRAY" }
+                { brand: "LADA", model: "Granta Hatchback", isMissing: false },
+                { brand: "LADA", model: "XRAY", isMissing: false },
+                { brand: "LADA", model: "ВАЗ 2108", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2109", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 201099", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2123", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2120", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2129", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2328", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2329", isMissing: true },
+                { brand: "LADA", model: "ВИС", isMissing: true },
+                { brand: "LADA", model: "ВАЗ 2102", isMissing: true }
             ],
             mass: [
                 { brand: "Hyundai", model: "i30" }, { brand: "Kia", model: "Ceed" },
@@ -361,49 +581,24 @@
                 { brand: "Volvo", model: "V40" }
             ]
         },
-        // ========== НОВАЯ КАТЕГОРИЯ "УНИВЕРСАЛ" ==========
-        {
-            id: "wagon",
-            name: "Универсал",
-            icon: "🚙",
-            russia: [
-                { brand: "LADA", model: "Vesta SW" },
-                { brand: "LADA", model: "Granta Universal" }
-            ],
-            mass: [
-                { brand: "Hyundai", model: "i30 Wagon" }, { brand: "Kia", model: "Ceed SW" },
-                { brand: "Toyota", model: "Corolla Touring" }, { brand: "Honda", model: "Accord Wagon" },
-                { brand: "Mazda", model: "6 Wagon" }, { brand: "Volkswagen", model: "Passat Variant" },
-                { brand: "Skoda", model: "Octavia Combi" }, { brand: "Ford", model: "Focus Wagon" },
-                { brand: "Renault", model: "Megane Estate" }, { brand: "Peugeot", model: "308 SW" },
-                { brand: "Citroen", model: "C5 X" }, { brand: "Suzuki", model: "Swace" },
-                { brand: "Subaru", model: "Outback" }
-            ],
-            premium: [
-                { brand: "BMW", model: "3 Series Touring" }, { brand: "BMW", model: "5 Series Touring" },
-                { brand: "Audi", model: "A4 Avant" }, { brand: "Audi", model: "A6 Avant" },
-                { brand: "Volvo", model: "V60" }, { brand: "Volvo", model: "V90" },
-                { brand: "Mercedes-Benz", model: "E-Class Estate" }
-            ]
-        },
-        // ===============================================
         {
             id: "suv",
             name: "Внедорожник / SUV",
             icon: "🚙",
             russia: [
-                { brand: "LADA", model: "Niva Travel" }, { brand: "LADA", model: "Niva Legend" },
-                { brand: "LADA", model: "XRAY Cross" }
+                { brand: "LADA", model: "Niva Travel", isMissing: false },
+                { brand: "LADA", model: "Niva Legend", isMissing: false },
+                { brand: "LADA", model: "XRAY Cross", isMissing: false },
+                { brand: "LADA", model: "LARGUS(если фургон)", isMissing: true }
             ],
             mass: [
                 { brand: "Hyundai", model: "Tucson" }, { brand: "Hyundai", model: "Santa Fe" },
                 { brand: "Kia", model: "Sportage" }, { brand: "Kia", model: "Sorento" },
                 { brand: "Toyota", model: "RAV4" }, { brand: "Honda", model: "CR-V" },
-                { brand: "Nissan", model: "Qashqai" }, { brand: "Nissan", model: "X-Trail" },
-                { brand: "Mazda", model: "CX-5" }, { brand: "Mitsubishi", model: "Outlander" },
-                { brand: "Volkswagen", model: "Tiguan" }, { brand: "Skoda", model: "Kodiaq" },
-                { brand: "Ford", model: "Kuga" }, { brand: "Geely", model: "Monjaro" },
-                { brand: "Geely", model: "Atlas" }, { brand: "BAIC", model: "X55" },
+                { brand: "Nissan", model: "Qashqai" }, { brand: "Mazda", model: "CX-5" },
+                { brand: "Mitsubishi", model: "Outlander" }, { brand: "Volkswagen", model: "Tiguan" },
+                { brand: "Skoda", model: "Kodiaq" }, { brand: "Ford", model: "Kuga" },
+                { brand: "Geely", model: "Monjaro" }, { brand: "BAIC", model: "X55" },
                 { brand: "Renault", model: "Duster" }, { brand: "Peugeot", model: "3008" },
                 { brand: "Citroen", model: "C5 Aircross" }, { brand: "Suzuki", model: "Vitara" },
                 { brand: "Jeep", model: "Compass" }, { brand: "Jeep", model: "Renegade" }
@@ -420,7 +615,7 @@
             name: "Купе",
             icon: "🏎️",
             russia: [
-                { brand: "LADA", model: "Revolution" }
+                { brand: "LADA", model: "Revolution", isMissing: false }
             ],
             mass: [
                 { brand: "Ford", model: "Mustang" },
@@ -438,7 +633,7 @@
             name: "Компактвэн",
             icon: "🚐",
             russia: [
-                { brand: "LADA", model: "Largus" }
+                { brand: "LADA", model: "Largus", isMissing: false }
             ],
             mass: [
                 { brand: "Citroen", model: "Berlingo" }, { brand: "Peugeot", model: "Rifter" },
@@ -455,7 +650,7 @@
             name: "Пикап",
             icon: "🛻",
             russia: [
-                { brand: "LADA", model: "Niva Pickup" }
+                { brand: "LADA", model: "Niva Pickup", isMissing: false }
             ],
             mass: [
                 { brand: "Ford", model: "Ranger" }, { brand: "Toyota", model: "Hilux" },
@@ -469,7 +664,7 @@
             name: "Электромобили",
             icon: "⚡",
             russia: [
-                { brand: "LADA", model: "e-Largus" }
+                { brand: "LADA", model: "e-Largus", isMissing: false }
             ],
             mass: [
                 { brand: "Hyundai", model: "Ioniq 5" }, { brand: "Hyundai", model: "Ioniq 6" },
@@ -518,7 +713,7 @@
         const titleDiv = document.createElement('div');
         titleDiv.className = 'segment-title';
         let tagClass = '', tagText = '';
-        if (segmentType === 'russia') { tagClass = 'russia-tag'; tagText = '🇷🇺 LADA'; }
+        if (segmentType === 'russia') { tagClass = 'russia-tag'; tagText = '🇷🇺 LADA (🔴 красные — модели отсутствуют)'; }
         else if (segmentType === 'mass') { tagClass = 'mass-tag'; tagText = '🚙 Масс-маркет'; }
         else { tagClass = 'premium-tag'; tagText = '🔱 Премиум'; }
         titleDiv.innerHTML = `<h3>${titlePrefix}</h3> <span class="${tagClass}">${tagText}</span>`;
@@ -541,9 +736,17 @@
         cars.forEach(car => {
             const btn = document.createElement('button');
             const fullText = `${car.brand} ${car.model}`;
-            btn.textContent = fullText;
+            const countryCode = getCountryCode(car.brand);
+            
+            btn.innerHTML = `${car.brand} ${car.model} <span class="country-badge">${countryCode}</span>`;
+            
             btn.classList.add('car-btn');
             btn.setAttribute('data-brand', car.brand.toLowerCase());
+            
+            if (car.isMissing === true || missingLadaModels.has(car.model)) {
+                btn.classList.add('missing-lada');
+            }
+            
             btn.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 await copyToClipboard(fullText);
@@ -573,12 +776,6 @@
         
         const premiumBlock = createSegmentBlock(category.premium, 'premium', '💎 Премиум сегмент', category.icon, category.name);
         if (premiumBlock) container.appendChild(premiumBlock);
-        
-        if ((!category.russia || category.russia.length === 0) && 
-            (!category.mass || category.mass.length === 0) && 
-            (!category.premium || category.premium.length === 0)) {
-            container.innerHTML = '<div style="padding: 2rem; text-align:center">Нет автомобилей в этой категории</div>';
-        }
         
         window.scrollTo({ top: currentScroll, behavior: 'auto' });
     }
