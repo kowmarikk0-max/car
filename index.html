@@ -283,6 +283,20 @@
             border-radius: 20px;
             margin-left: 6px;
         }
+		
+		
+		.car-modal-header {
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+		.car-modal-header:hover {
+			background: linear-gradient(135deg, #2c5f7a, #1e3b4a);
+		}
+
+		.car-modal-header h2 {
+			pointer-events: none; /* Чтобы клик проходил на весь блок, а не только на текст */
+		}
 
         .car-btn[data-brand="lada"]::before { content: "🇷🇺"; margin-right: 4px; }
         .car-btn[data-brand="hyundai"]::before { content: "🇰🇷"; margin-right: 4px; }
@@ -825,11 +839,17 @@
         showCopyMessage(`Фильтр сброшен`);
     }
 
+        // ============================================================
+    // МОДАЛЬНОЕ ОКНО - при клике на заголовок копируется марка и модель
+    // ============================================================
     function openCarModal(car) {
         const modal = document.getElementById('carModal');
         const modalContent = document.getElementById('carModalContent');
         modalContent.innerHTML = `
-            <div class="car-modal-header"><h2>${car.brand} ${car.model}</h2><button class="close-modal" onclick="closeCarModal()">&times;</button></div>
+            <div class="car-modal-header" style="cursor: pointer;" onclick="copyToClipboard('${car.brand} ${car.model}')">
+                <h2>${car.brand} ${car.model}</h2>
+                <button class="close-modal" onclick="event.stopPropagation(); closeCarModal()">&times;</button>
+            </div>
             <div class="car-modal-body">
                 <div class="car-price"><i class="fas fa-tag"></i> ${car.price || 'Цена не указана'}</div>
                 <div class="car-detail"><span class="car-detail-label">📌 Коробка:</span><span class="car-detail-value">${car.transmission || 'Не указана'}</span></div>
@@ -840,6 +860,8 @@
             </div>`;
         modal.classList.add('active');
     }
+
+    function closeCarModal() { document.getElementById('carModal').classList.remove('active'); }
 
     function closeCarModal() { document.getElementById('carModal').classList.remove('active'); }
 
