@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>АвтоКаталог | Кнопки категорий сверху | Копирование без смайликов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f2f6fc 0%, #e6edf5 100%);
+            padding: 1.8rem 1.5rem 3rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .hero h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #1f2f3e, #0f2b3f);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .hero p {
+            color: #2c4a62;
+            font-size: 0.95rem;
+            background: rgba(255, 248, 230, 0.8);
+            display: inline-block;
+            padding: 0.3rem 1.5rem;
+            border-radius: 60px;
+            margin-top: 8px;
+        }
+
+        /* Панель категорий сверху */
+        .categories-toolbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 80px;
+            padding: 0.7rem 1rem;
+            margin-bottom: 2.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 245, 210, 0.8);
+            position: relative;
+            z-index: 10;
+        }
+
+        .category-filter-btn {
+            background: #ffffffdd;
+            border: none;
+            padding: 0.6rem 1.3rem;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1f3a48;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .category-filter-btn span {
+            font-size: 1.2rem;
+        }
+        .category-filter-btn:hover {
+            background: #fff3e0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        .category-filter-btn.active {
+            background: linear-gradient(115deg, #1e3b4a, #14303e);
+            color: #ffecb3;
+            border-color: #ffbe5e;
+        }
+
+        .category-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .segment-section {
+            margin-bottom: 0.5rem;
+        }
+        .segment-title {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .segment-title h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .russia-tag {
+            background: linear-gradient(120deg, #1f6392, #0d4b6e);
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .mass-tag {
+            background: #2c5f8a;
+            color: white;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .premium-tag {
+            background: linear-gradient(120deg, #c9a03d, #b8860b);
+            color: #1e1a0c;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .category-card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(2px);
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 30px -12px rgba(0,0,0,0.12);
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+            transition: transform 0.2s;
+            border: 1px solid rgba(255,255,240,0.7);
+        }
+        .category-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .category-card.russia-card {
+            background: linear-gradient(135deg, rgba(240,248,255,0.95), rgba(220,240,255,0.9));
+            border-left: 6px solid #2a7f6e;
+        }
+        .category-card.russia-card .category-header {
+            background: linear-gradient(95deg, #1a4d5f, #135b6e);
+            border-bottom: 3px solid #ffaa44;
+        }
+
+        .category-card.mass-card .category-header {
+            background: rgba(35, 55, 70, 0.92);
+            border-bottom: 3px solid #5f9ea0;
+        }
+
+        .category-card.premium-card {
+            background: linear-gradient(135deg, rgba(255,248,225,0.92), rgba(255,242,214,0.88));
+            border-left: 6px solid #d4af37;
+        }
+        .category-card.premium-card .category-header {
+            background: linear-gradient(95deg, #2c2416, #3a2c1a);
+            border-bottom: 3px solid #e4b363;
+        }
+
+        .category-header {
+            padding: 0.9rem 1.8rem;
+            color: white;
+        }
+        .category-header h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .category-header h2 span {
+            font-size: 1.7rem;
+        }
+
+        .buttons-container {
+            padding: 1.5rem 1.8rem 1.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+        }
+
+        .car-btn {
+            background: linear-gradient(110deg, #ffffff, #fafcff);
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1f2e3a;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.06);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255,255,245,0.9);
+        }
+
+        .car-btn[data-brand="lada"]::before { content: "🇷🇺"; }
+        .car-btn[data-brand="hyundai"]::before { content: "🌊"; }
+        .car-btn[data-brand="kia"]::before { content: "⭐"; }
+        .car-btn[data-brand="geely"]::before { content: "🐉"; }
+        .car-btn[data-brand="nio"]::before { content: "⚡"; }
+        .car-btn[data-brand="ford"]::before { content: "🦅"; }
+        .car-btn[data-brand="jeep"]::before { content: "🏔️"; }
+        .car-btn[data-brand="bmw"]::before { content: "🔷"; }
+        .car-btn[data-brand="vw"]::before { content: "🐞"; }
+        .car-btn[data-brand="audi"]::before { content: "🔗"; }
+        .car-btn[data-brand="toyota"]::before { content: "🌍"; }
+        .car-btn[data-brand="honda"]::before { content: "🏁"; }
+        .car-btn[data-brand="nissan"]::before { content: "🌊"; }
+        .car-btn[data-brand="suzuki"]::before { content: "🌀"; }
+        .car-btn[data-brand="mazda"]::before { content: "🌀"; }
+        .car-btn[data-brand="mitsubishi"]::before { content: "🔺"; }
+        .car-btn[data-brand="renault"]::before { content: "💎"; }
+        .car-btn[data-brand="peugeot"]::before { content: "🦁"; }
+        .car-btn[data-brand="citroen"]::before { content: "🧩"; }
+        .car-btn[data-brand="fiat"]::before { content: "🍕"; }
+        .car-btn[data-brand="skoda"]::before { content: "🪶"; }
+        .car-btn[data-brand="volvo"]::before { content: "🔰"; }
+        .car-btn[data-brand="baic"]::before { content: "🌐"; }
+
+        .car-btn:hover {
+            background: linear-gradient(110deg, #fff3e2, #ffe8d4);
+            transform: scale(1.02);
+            border-color: #f3bc6c;
+        }
+        .car-btn:active {
+            transform: scale(0.97);
+        }
+
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #1e2f3c;
+            backdrop-filter: blur(14px);
+            color: #a8ffc5;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
+            border-left: 5px solid #4caf50;
+            z-index: 1000;
+            transition: all 0.2s ease;
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 2.5rem;
+            color: #4a6272;
+            font-size: 0.8rem;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+            padding-top: 1.5rem;
+        }
+
+        @media (max-width: 680px) {
+            .copy-toast { white-space: normal; width: 85%; text-align: center; font-size: 0.85rem; }
+            .buttons-container { padding: 1rem; gap: 0.7rem; }
+            .car-btn { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
+            .category-filter-btn { padding: 0.45rem 1rem; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🚗 АвтоКаталог</h1>
+        <p>Кнопки категорий сверху · Нажми на модель — скопируется название (без смайликов)</p>
+    </div>
+
+    <div class="categories-toolbar" id="categoryToolbar"></div>
+    <div class="category-grid" id="dynamicGrid"></div>
+    <div class="footer-note">✓ Клик по автомобилю → копирование: «Марка Модель»</div>
+</div>
+
+<div id="copyToast" class="copy-toast">✓ Скопировано:</div>
+
+<script>
+    const copyToast = document.getElementById('copyToast');
+    
+    function showCopyMessage(text) {
+        copyToast.textContent = `✓ Скопировано: ${text}`;
+        copyToast.classList.add('show');
+        setTimeout(() => copyToast.classList.remove('show'), 1800);
+    }
+
+    async function copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            showCopyMessage(text);
+        } catch (err) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showCopyMessage(text);
+        }
+    }
+
+    const categoriesData = [
+        {
+            id: "sedan",
+            name: "Седан",
+            icon: "🚘",
+            russia: [
+                { brand: "LADA", model: "Vesta" },
+                { brand: "LADA", model: "Granta" }
+            ],
+            mass: [
+                { brand: "Hyundai", model: "Sonata" }, { brand: "Kia", model: "K5" },
+                { brand: "Toyota", model: "Camry" }, { brand: "Honda", model: "Accord" },
+                { brand: "Nissan", model: "Altima" }, { brand: "Mazda", model: "6" },
+                { brand: "Volkswagen", model: "Passat" }, { brand: "Skoda", model: "Octavia" },
+                { brand: "Ford", model: "Mondeo" }, { brand: "Geely", model: "Emgrand" },
+                { brand: "BAIC", model: "U5 Plus" }, { brand: "Renault", model: "Logan" },
+                { brand: "Citroen", model: "C5 X" }
+            ],
+            premium: [
+                { brand: "BMW", model: "3 Series" }, { brand: "Audi", model: "A4" },
+                { brand: "Volvo", model: "S60" }, { brand: "NIO", model: "ET7" }
+            ]
+        },
+        {
+            id: "hatchback",
+            name: "Хетчбэк",
+            icon: "🚙",
+            russia: [
+                { brand: "LADA", model: "Granta Hatchback" }, { brand: "LADA", model: "XRAY" }
+            ],
+            mass: [
+                { brand: "Hyundai", model: "i30" }, { brand: "Kia", model: "Ceed" },
+                { brand: "Volkswagen", model: "Golf" }, { brand: "Toyota", model: "Corolla Hatchback" },
+                { brand: "Honda", model: "Civic Hatchback" }, { brand: "Mazda", model: "3" },
+                { brand: "Ford", model: "Focus" }, { brand: "Renault", model: "Megane" },
+                { brand: "Peugeot", model: "308" }, { brand: "Skoda", model: "Scala" },
+                { brand: "Suzuki", model: "Swift" }, { brand: "Fiat", model: "Punto" }
+            ],
+            premium: [
+                { brand: "BMW", model: "1 Series" }, { brand: "Audi", model: "A3 Sportback" },
+                { brand: "Volvo", model: "V40" }
+            ]
+        },
+        {
+            id: "suv",
+            name: "Внедорожник / SUV",
+            icon: "🚙",
+            russia: [
+                { brand: "LADA", model: "Niva Travel" }, { brand: "LADA", model: "Niva Legend" },
+                { brand: "LADA", model: "XRAY Cross" }
+            ],
+            mass: [
+                { brand: "Hyundai", model: "Tucson" }, { brand: "Hyundai", model: "Santa Fe" },
+                { brand: "Kia", model: "Sportage" }, { brand: "Kia", model: "Sorento" },
+                { brand: "Toyota", model: "RAV4" }, { brand: "Honda", model: "CR-V" },
+                { brand: "Nissan", model: "Qashqai" }, { brand: "Nissan", model: "X-Trail" },
+                { brand: "Mazda", model: "CX-5" }, { brand: "Mitsubishi", model: "Outlander" },
+                { brand: "Volkswagen", model: "Tiguan" }, { brand: "Skoda", model: "Kodiaq" },
+                { brand: "Ford", model: "Kuga" }, { brand: "Geely", model: "Monjaro" },
+                { brand: "Geely", model: "Atlas" }, { brand: "BAIC", model: "X55" },
+                { brand: "Renault", model: "Duster" }, { brand: "Peugeot", model: "3008" },
+                { brand: "Citroen", model: "C5 Aircross" }, { brand: "Suzuki", model: "Vitara" },
+                { brand: "Jeep", model: "Compass" }, { brand: "Jeep", model: "Renegade" }
+            ],
+            premium: [
+                { brand: "BMW", model: "X3" }, { brand: "BMW", model: "X5" },
+                { brand: "Audi", model: "Q5" }, { brand: "Audi", model: "Q7" },
+                { brand: "Volvo", model: "XC60" }, { brand: "Volvo", model: "XC90" },
+                { brand: "NIO", model: "ES6" }, { brand: "NIO", model: "ES8" }
+            ]
+        },
+        {
+            id: "coupe",
+            name: "Купе / Спорткар",
+            icon: "🏎️",
+            russia: [
+                { brand: "LADA", model: "Revolution" }
+            ],
+            mass: [
+                { brand: "Ford", model: "Mustang" }, { brand: "Toyota", model: "GR Supra" },
+                { brand: "Nissan", model: "Z" }, { brand: "Mazda", model: "MX-5" },
+                { brand: "Subaru", model: "BRZ" }
+            ],
+            premium: [
+                { brand: "BMW", model: "M4" }, { brand: "Audi", model: "RS5" },
+                { brand: "Volvo", model: "Polestar 1" }
+            ]
+        },
+        {
+            id: "compactvan",
+            name: "Компактвэн",
+            icon: "🚐",
+            russia: [
+                { brand: "LADA", model: "Largus" }
+            ],
+            mass: [
+                { brand: "Citroen", model: "Berlingo" }, { brand: "Peugeot", model: "Rifter" },
+                { brand: "Renault", model: "Kangoo" }, { brand: "Ford", model: "Tourneo Connect" },
+                { brand: "Volkswagen", model: "Caddy" }, { brand: "Fiat", model: "Doblo" },
+                { brand: "Toyota", model: "Proace City" }
+            ],
+            premium: [
+                { brand: "BMW", model: "2 Series Gran Tourer" }
+            ]
+        },
+        {
+            id: "pickup",
+            name: "Пикап",
+            icon: "🛻",
+            russia: [
+                { brand: "LADA", model: "Niva Pickup" }
+            ],
+            mass: [
+                { brand: "Ford", model: "Ranger" }, { brand: "Toyota", model: "Hilux" },
+                { brand: "Nissan", model: "Navara" }, { brand: "Mitsubishi", model: "L200" },
+                { brand: "Volkswagen", model: "Amarok" }, { brand: "Jeep", model: "Gladiator" }
+            ],
+            premium: []
+        },
+        {
+            id: "electric",
+            name: "Электромобили",
+            icon: "⚡",
+            russia: [
+                { brand: "LADA", model: "e-Largus" }
+            ],
+            mass: [
+                { brand: "Hyundai", model: "Ioniq 5" }, { brand: "Hyundai", model: "Ioniq 6" },
+                { brand: "Kia", model: "EV6" }, { brand: "Kia", model: "EV9" },
+                { brand: "Volkswagen", model: "ID.4" }, { brand: "Volkswagen", model: "ID. Buzz" },
+                { brand: "Ford", model: "Mustang Mach-E" }, { brand: "Nissan", model: "Ariya" },
+                { brand: "Toyota", model: "bZ4X" }, { brand: "Geely", model: "Geometry C" },
+                { brand: "BAIC", model: "EU5" }, { brand: "Renault", model: "Megane E-Tech" },
+                { brand: "Peugeot", model: "e-2008" }
+            ],
+            premium: [
+                { brand: "BMW", model: "i4" }, { brand: "BMW", model: "iX" },
+                { brand: "Audi", model: "e-tron GT" }, { brand: "Audi", model: "Q4 e-tron" },
+                { brand: "Volvo", model: "C40 Recharge" }, { brand: "Volvo", model: "EX90" },
+                { brand: "NIO", model: "ET5" }, { brand: "NIO", model: "EL7" }
+            ]
+        }
+    ];
+
+    let currentCategoryId = "sedan";
+
+    function renderToolbar() {
+        const toolbar = document.getElementById('categoryToolbar');
+        toolbar.innerHTML = '';
+        categoriesData.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'category-filter-btn';
+            if (currentCategoryId === cat.id) btn.classList.add('active');
+            btn.innerHTML = `<span>${cat.icon}</span> ${cat.name}`;
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentCategoryId === cat.id) return;
+                currentCategoryId = cat.id;
+                renderToolbar();
+                renderCardsByCategory(currentCategoryId);
+            });
+            toolbar.appendChild(btn);
+        });
+    }
+
+    function createSegmentBlock(cars, segmentType, titlePrefix, categoryIcon, categoryName) {
+        if (!cars.length) return null;
+        const segmentDiv = document.createElement('div');
+        segmentDiv.className = 'segment-section';
+        
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'segment-title';
+        let tagClass = '', tagText = '';
+        if (segmentType === 'russia') { tagClass = 'russia-tag'; tagText = '🇷🇺 LADA'; }
+        else if (segmentType === 'mass') { tagClass = 'mass-tag'; tagText = '🚙 Масс-маркет'; }
+        else { tagClass = 'premium-tag'; tagText = '🔱 Премиум'; }
+        titleDiv.innerHTML = `<h3>${titlePrefix}</h3> <span class="${tagClass}">${tagText}</span>`;
+        segmentDiv.appendChild(titleDiv);
+
+        const card = document.createElement('div');
+        let cardClass = 'category-card ';
+        if (segmentType === 'russia') cardClass += 'russia-card';
+        else if (segmentType === 'mass') cardClass += 'mass-card';
+        else cardClass += 'premium-card';
+        card.className = cardClass;
+
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        header.innerHTML = `<h2><span>${categoryIcon}</span> ${categoryName}</h2>`;
+        
+        const btnsContainer = document.createElement('div');
+        btnsContainer.className = 'buttons-container';
+        
+        cars.forEach(car => {
+            const btn = document.createElement('button');
+            const fullText = `${car.brand} ${car.model}`;
+            btn.textContent = fullText;
+            btn.classList.add('car-btn');
+            btn.setAttribute('data-brand', car.brand.toLowerCase());
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                await copyToClipboard(fullText);
+            });
+            btnsContainer.appendChild(btn);
+        });
+        
+        card.appendChild(header);
+        card.appendChild(btnsContainer);
+        segmentDiv.appendChild(card);
+        return segmentDiv;
+    }
+
+    function renderCardsByCategory(categoryId) {
+        const category = categoriesData.find(c => c.id === categoryId);
+        if (!category) return;
+        const container = document.getElementById('dynamicGrid');
+        const currentScroll = window.scrollY;
+        
+        container.innerHTML = '';
+        
+        const russiaBlock = createSegmentBlock(category.russia, 'russia', '🇷🇺 Российский автопром', category.icon, category.name);
+        if (russiaBlock) container.appendChild(russiaBlock);
+        
+        const massBlock = createSegmentBlock(category.mass, 'mass', '🏭 Масс-маркет', category.icon, category.name);
+        if (massBlock) container.appendChild(massBlock);
+        
+        const premiumBlock = createSegmentBlock(category.premium, 'premium', '💎 Премиум сегмент', category.icon, category.name);
+        if (premiumBlock) container.appendChild(premiumBlock);
+        
+        if ((!category.russia || category.russia.length === 0) && 
+            (!category.mass || category.mass.length === 0) && 
+            (!category.premium || category.premium.length === 0)) {
+            container.innerHTML = '<div style="padding: 2rem; text-align:center">Нет автомобилей в этой категории</div>';
+        }
+        
+        window.scrollTo({ top: currentScroll, behavior: 'auto' });
+    }
+
+    renderToolbar();
+    renderCardsByCategory(currentCategoryId);
+</script>
+</body>
+</html>
