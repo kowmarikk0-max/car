@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>АвтоКаталог | Кнопки категорий сверху | Копирование без смайликов</title>
+    <title>АвтоКаталог | Купе (без спорткаров) | Копирование без смайликов</title>
     <style>
         * {
             margin: 0;
@@ -33,17 +33,7 @@
             -webkit-background-clip: text;
             color: transparent;
         }
-        .hero p {
-            color: #2c4a62;
-            font-size: 0.95rem;
-            background: rgba(255, 248, 230, 0.8);
-            display: inline-block;
-            padding: 0.3rem 1.5rem;
-            border-radius: 60px;
-            margin-top: 8px;
-        }
 
-        /* Панель категорий сверху */
         .categories-toolbar {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
@@ -290,12 +280,11 @@
 <div class="container">
     <div class="hero">
         <h1>🚗 АвтоКаталог</h1>
-        <p>Кнопки категорий сверху · Нажми на модель — скопируется название (без смайликов)</p>
     </div>
 
     <div class="categories-toolbar" id="categoryToolbar"></div>
     <div class="category-grid" id="dynamicGrid"></div>
-    <div class="footer-note">✓ Клик по автомобилю → копирование: «Марка Модель»</div>
+    <div class="footer-note">✓ Клик по автомобилю → копирование: «Марка Модель» (без смайликов)</div>
 </div>
 
 <div id="copyToast" class="copy-toast">✓ Скопировано:</div>
@@ -397,18 +386,19 @@
         },
         {
             id: "coupe",
-            name: "Купе / Спорткар",
+            name: "Купе",
             icon: "🏎️",
             russia: [
                 { brand: "LADA", model: "Revolution" }
             ],
             mass: [
-                { brand: "Ford", model: "Mustang" }, { brand: "Toyota", model: "GR Supra" },
-                { brand: "Nissan", model: "Z" }, { brand: "Mazda", model: "MX-5" },
-                { brand: "Subaru", model: "BRZ" }
+                { brand: "Ford", model: "Mustang" },
+                { brand: "Toyota", model: "GR Supra" },
+                { brand: "Nissan", model: "Z" }
             ],
             premium: [
-                { brand: "BMW", model: "M4" }, { brand: "Audi", model: "RS5" },
+                { brand: "BMW", model: "M4" },
+                { brand: "Audi", model: "RS5" },
                 { brand: "Volvo", model: "Polestar 1" }
             ]
         },
