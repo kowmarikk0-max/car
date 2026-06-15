@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>АвтоКаталог</title>
-
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e3b4a'/%3E%3Ctext x='50' y='78' font-size='72' text-anchor='middle' fill='%23ffbe5e' font-weight='bold'%3E🚙%3C/text%3E%3C/svg%3E">
-<!-- Для Apple устройств (iPhone, iPad) -->
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e3b4a'/%3E%3Ctext x='50' y='78' font-size='72' text-anchor='middle' fill='%23ffbe5e' font-weight='bold'%3E🚗%3C/text%3E%3C/svg%3E">
-
-
+    <title>АвтоКаталог | Универсалы + Купе | Копирование без смайликов</title>
     
+    <!-- ФАВИКОН (иконка вкладки) - увеличенная машинка -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e3b4a'/%3E%3Ctext x='50' y='78' font-size='72' text-anchor='middle' fill='%23ffbe5e' font-weight='bold'%3E🚗%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e3b4a'/%3E%3Ctext x='50' y='78' font-size='72' text-anchor='middle' fill='%23ffbe5e' font-weight='bold'%3E🚗%3C/text%3E%3C/svg%3E">
     
     <style>
         * {
@@ -364,6 +361,32 @@
                 { brand: "Volvo", model: "V40" }
             ]
         },
+        // ========== НОВАЯ КАТЕГОРИЯ "УНИВЕРСАЛ" ==========
+        {
+            id: "wagon",
+            name: "Универсал",
+            icon: "🚙",
+            russia: [
+                { brand: "LADA", model: "Vesta SW" },
+                { brand: "LADA", model: "Granta Universal" }
+            ],
+            mass: [
+                { brand: "Hyundai", model: "i30 Wagon" }, { brand: "Kia", model: "Ceed SW" },
+                { brand: "Toyota", model: "Corolla Touring" }, { brand: "Honda", model: "Accord Wagon" },
+                { brand: "Mazda", model: "6 Wagon" }, { brand: "Volkswagen", model: "Passat Variant" },
+                { brand: "Skoda", model: "Octavia Combi" }, { brand: "Ford", model: "Focus Wagon" },
+                { brand: "Renault", model: "Megane Estate" }, { brand: "Peugeot", model: "308 SW" },
+                { brand: "Citroen", model: "C5 X" }, { brand: "Suzuki", model: "Swace" },
+                { brand: "Subaru", model: "Outback" }
+            ],
+            premium: [
+                { brand: "BMW", model: "3 Series Touring" }, { brand: "BMW", model: "5 Series Touring" },
+                { brand: "Audi", model: "A4 Avant" }, { brand: "Audi", model: "A6 Avant" },
+                { brand: "Volvo", model: "V60" }, { brand: "Volvo", model: "V90" },
+                { brand: "Mercedes-Benz", model: "E-Class Estate" }
+            ]
+        },
+        // ===============================================
         {
             id: "suv",
             name: "Внедорожник / SUV",
