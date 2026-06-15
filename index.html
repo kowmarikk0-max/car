@@ -2,26 +2,109 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>АвтоКаталог</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Шпора</title>
     
     <!-- ФАВИКОН -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231e3b4a'/%3E%3Ctext x='50' y='78' font-size='72' text-anchor='middle' fill='%23ffbe5e' font-weight='bold'%3E🚗%3C/text%3E%3C/svg%3E">
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* ========== ГЛОБАЛЬНЫЕ СТИЛИ ========== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
         }
 
         body {
+            font-family: 'Inter', system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
             background: linear-gradient(145deg, #f2f6fc 0%, #e6edf5 100%);
-            padding: 1.8rem 1.5rem 3rem;
+            color: #1a2c3e;
+            line-height: 1.4;
+            scroll-behavior: smooth;
         }
 
-        /* ГЛАВНЫЙ КОНТЕЙНЕР С ДВУМЯ КОЛОНКАМИ */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(215, 235, 250, 0.5), rgba(245, 250, 255, 0.9));
+            z-index: -2;
+        }
+
+        /* Переключатель вкладок */
+        .tabs-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1.8rem 1.5rem 2rem;
+        }
+        
+        .tabs-header {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            border-radius: 80px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 245, 210, 0.8);
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 14px 25px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 60px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #1f3a48;
+        }
+        
+        .tab-btn i, .tab-btn span {
+            font-size: 1.3rem;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #1e3b4a, #14303e);
+            color: #ffecb3;
+            box-shadow: 0 5px 15px rgba(30, 59, 74, 0.3);
+        }
+        
+        .tab-btn:not(.active):hover {
+            background: #fff3e0;
+            transform: translateY(-2px);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== СТИЛИ ДЛЯ АВТОКАТАЛОГА ========== */
         .main-layout {
             display: flex;
             gap: 2rem;
@@ -30,7 +113,6 @@
             position: relative;
         }
 
-        /* ЛЕВАЯ ПАНЕЛЬ — РАСШИФРОВКА СТРАН */
         .legend-panel {
             width: 260px;
             flex-shrink: 0;
@@ -87,7 +169,6 @@
             font-size: 1.2rem;
         }
 
-        /* ПРАВАЯ ЧАСТЬ — ОСНОВНОЙ КОНТЕНТ */
         .right-content {
             flex: 1;
             min-width: 0;
@@ -223,7 +304,6 @@
             gap: 0.9rem;
         }
 
-        /* СТАНДАРТНАЯ КНОПКА */
         .car-btn {
             background: linear-gradient(110deg, #ffffff, #fafcff);
             border: none;
@@ -241,7 +321,6 @@
             border: 1px solid rgba(255,255,245,0.9);
         }
 
-        /* Бейдж с кодом страны (3 буквы) */
         .country-badge {
             display: inline-flex;
             align-items: center;
@@ -256,7 +335,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* КРАСНАЯ КНОПКА ДЛЯ ОТСУТСТВУЮЩИХ МОДЕЛЕЙ LADA */
         .car-btn.missing-lada {
             background: linear-gradient(110deg, #ffe0e0, #ffc0c0);
             color: #8b0000;
@@ -267,18 +345,20 @@
             background: linear-gradient(110deg, #ffb8b8, #ffa0a0);
         }
 
-        /* Иконки брендов (флаги) */
         .car-btn[data-brand="lada"]::before { content: "🇷🇺"; margin-right: 4px; }
         .car-btn[data-brand="hyundai"]::before { content: "🇰🇷"; margin-right: 4px; }
         .car-btn[data-brand="kia"]::before { content: "🇰🇷"; margin-right: 4px; }
         .car-btn[data-brand="geely"]::before { content: "🇨🇳"; margin-right: 4px; }
         .car-btn[data-brand="nio"]::before { content: "🇨🇳"; margin-right: 4px; }
+        .car-btn[data-brand="baic"]::before { content: "🇨🇳"; margin-right: 4px; }
         .car-btn[data-brand="ford"]::before { content: "🇺🇸"; margin-right: 4px; }
         .car-btn[data-brand="jeep"]::before { content: "🇺🇸"; margin-right: 4px; }
         .car-btn[data-brand="bmw"]::before { content: "🇩🇪"; margin-right: 4px; }
-        .car-btn[data-brand="vw"]::before { content: "🇩🇪"; margin-right: 4px; }
+        .car-btn[data-brand="vw"]::before,
+        .car-btn[data-brand="volkswagen"]::before { content: "🇩🇪"; margin-right: 4px; }
         .car-btn[data-brand="audi"]::before { content: "🇩🇪"; margin-right: 4px; }
         .car-btn[data-brand="mercedes"]::before { content: "🇩🇪"; margin-right: 4px; }
+        .car-btn[data-brand="mercedes-benz"]::before { content: "🇩🇪"; margin-right: 4px; }
         .car-btn[data-brand="toyota"]::before { content: "🇯🇵"; margin-right: 4px; }
         .car-btn[data-brand="honda"]::before { content: "🇯🇵"; margin-right: 4px; }
         .car-btn[data-brand="nissan"]::before { content: "🇯🇵"; margin-right: 4px; }
@@ -292,7 +372,9 @@
         .car-btn[data-brand="fiat"]::before { content: "🇮🇹"; margin-right: 4px; }
         .car-btn[data-brand="skoda"]::before { content: "🇨🇿"; margin-right: 4px; }
         .car-btn[data-brand="volvo"]::before { content: "🇸🇪"; margin-right: 4px; }
-        .car-btn[data-brand="baic"]::before { content: "🇨🇳"; margin-right: 4px; }
+        .car-btn[data-brand="opel"]::before { content: "🇩🇪"; margin-right: 4px; }
+        .car-btn[data-brand="jaguar"]::before { content: "🇬🇧"; margin-right: 4px; }
+        .car-btn[data-brand="land rover"]::before { content: "🇬🇧"; margin-right: 4px; }
 
         .car-btn:hover {
             transform: scale(1.02);
@@ -300,38 +382,284 @@
         }
         .car-btn:active { transform: scale(0.97); }
 
+        /* ========== СТИЛИ ДЛЯ ГОРОДОВ РОССИИ ========== */
+        .cities-wrapper {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 1.8rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+        }
+        
+        .hero-cities {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-cities h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #1f2f3e, #0f2b3f);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .search-section {
+            max-width: 550px;
+            margin: 0 auto 2rem auto;
+        }
+        
+        .search-box {
+            display: flex;
+            background: white;
+            border-radius: 60px;
+            box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(44, 125, 160, 0.3);
+            transition: all 0.2s;
+        }
+        
+        .search-box:focus-within {
+            box-shadow: 0 10px 24px -6px rgba(44, 125, 160, 0.25);
+            border-color: #2c7da0;
+        }
+        
+        .search-box i {
+            padding-left: 20px;
+            align-self: center;
+            color: #6c9eb8;
+        }
+        
+        #searchInput {
+            flex: 1;
+            padding: 0.9rem 1rem 0.9rem 0.8rem;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            font-weight: 500;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .clear-search {
+            background: none;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+            color: #9bb7ca;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+        
+        .clear-search:hover {
+            color: #2c7da0;
+        }
+        
+        .search-stats {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #4f7a97;
+            min-height: 2rem;
+        }
+        
+        .districts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.8rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .district-card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(100, 140, 170, 0.15);
+        }
+        
+        .district-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 32px -12px rgba(0, 32, 64, 0.15);
+        }
+        
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fefefe;
+        }
+        
+        .card-header i {
+            font-size: 1.8rem;
+        }
+        
+        .card-header h2 {
+            font-size: 1.45rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .regions-container {
+            padding: 0.8rem 1.2rem 1.2rem 1.2rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .region-button {
+            background: #f1f6fa;
+            border-radius: 60px;
+            padding: 0.5rem 1rem;
+            margin: 0.4rem 0.3rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1f5e7e;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+        
+        .region-button:hover {
+            background: #e2edf5;
+            border-color: #bdd8ea;
+            transform: scale(1.02);
+        }
+        
+        .cities-dropdown {
+            margin-top: 0.2rem;
+            margin-bottom: 0.5rem;
+            margin-left: 1rem;
+            margin-right: 0.5rem;
+            background: #f9fbfd;
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            border-left: 3px solid #6da1c2;
+            display: none;
+        }
+        
+        .cities-dropdown.show,
+        .cities-dropdown.force-open {
+            display: block;
+            animation: fadeSlide 0.2s ease;
+        }
+        
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .cities-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #2c7da0;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .city-badge {
+            display: inline-block;
+            background: #e4eef5;
+            padding: 0.25rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin: 0.2rem 0.3rem;
+            color: #135b7c;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        
+        .city-badge:hover {
+            background: #d0e2ed;
+            transform: scale(1.02);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .city-badge:active {
+            transform: scale(0.98);
+        }
+        
+        .highlight {
+            background-color: #ffd966;
+            color: #3b2e1e;
+            border-radius: 12px;
+            padding: 0 2px;
+            font-weight: 600;
+            box-shadow: 0 0 0 1px #f0b27a;
+        }
+        
+        /* Общий тост */
         .copy-toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: #1e2f3c;
-            backdrop-filter: blur(14px);
-            color: #a8ffc5;
-            padding: 12px 28px;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
-            border-left: 5px solid #4caf50;
+            background: #1f3b2c;
+            color: #ffecb3;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             z-index: 1000;
-            transition: all 0.2s ease;
             opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
             pointer-events: none;
-            white-space: nowrap;
+            font-family: monospace;
         }
-        .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
+        
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
         .footer-note {
             text-align: center;
-            margin-top: 2.5rem;
-            color: #4a6272;
-            font-size: 0.8rem;
-            border-top: 1px dashed rgba(0,0,0,0.1);
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #4a7490;
+            border-top: 1px solid #cde0ea;
             padding-top: 1.5rem;
         }
-
+        
+        /* Стили для скроллбара */
+        .districts-grid::-webkit-scrollbar,
+        .regions-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .districts-grid::-webkit-scrollbar-track,
+        .regions-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .districts-grid::-webkit-scrollbar-thumb,
+        .regions-container::-webkit-scrollbar-thumb {
+            background: #ffbe5e;
+            border-radius: 10px;
+        }
+        
+        /* Адаптивность */
         @media (max-width: 900px) {
+            .tabs-container { padding: 1rem; }
             .main-layout {
                 flex-direction: column;
             }
@@ -353,91 +681,137 @@
                 flex: 1;
                 min-width: 120px;
             }
+            .tabs-header {
+                flex-direction: column;
+                border-radius: 30px;
+                gap: 8px;
+            }
+            .tab-btn {
+                justify-content: center;
+            }
+            .districts-grid {
+                grid-template-columns: 1fr;
+            }
         }
-
+        
         @media (max-width: 680px) {
             .copy-toast { white-space: normal; width: 85%; text-align: center; }
             .buttons-container { padding: 1rem; gap: 0.7rem; }
             .car-btn { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
             .country-badge { font-size: 0.6rem; padding: 0.1rem 0.4rem; }
+            .cities-wrapper { padding: 1rem; }
         }
     </style>
 </head>
 <body>
-<div class="main-layout">
-    <!-- ЛЕВАЯ ПАНЕЛЬ: РАСШИФРОВКА СТРАН -->
-    <div class="legend-panel">
-        <div class="legend-title">
-            <span>🌍</span> Коды стран
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">RUS</span>
-            <span class="legend-flag">🇷🇺</span>
-            <span class="legend-country">Россия</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">KOR</span>
-            <span class="legend-flag">🇰🇷</span>
-            <span class="legend-country">Южная Корея</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">JPN</span>
-            <span class="legend-flag">🇯🇵</span>
-            <span class="legend-country">Япония</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">DEU</span>
-            <span class="legend-flag">🇩🇪</span>
-            <span class="legend-country">Германия</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">USA</span>
-            <span class="legend-flag">🇺🇸</span>
-            <span class="legend-country">США</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">FRA</span>
-            <span class="legend-flag">🇫🇷</span>
-            <span class="legend-country">Франция</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">CHN</span>
-            <span class="legend-flag">🇨🇳</span>
-            <span class="legend-country">Китай</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">SWE</span>
-            <span class="legend-flag">🇸🇪</span>
-            <span class="legend-country">Швеция</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">ITA</span>
-            <span class="legend-flag">🇮🇹</span>
-            <span class="legend-country">Италия</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">CZE</span>
-            <span class="legend-flag">🇨🇿</span>
-            <span class="legend-country">Чехия</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-code">GBR</span>
-            <span class="legend-flag">🇬🇧</span>
-            <span class="legend-country">Великобритания</span>
-        </div>
+<div class="tabs-container">
+    <!-- Вкладки -->
+    <div class="tabs-header">
+        <button class="tab-btn active" onclick="switchTab('auto')">
+            <i class="fas fa-car"></i> <span>🚗 Автокаталог</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('cities')">
+            <i class="fas fa-map-marked-alt"></i> <span>🏙️ Города России</span>
+        </button>
     </div>
-
-    <!-- ПРАВАЯ ЧАСТЬ: ОСНОВНОЙ КОНТЕНТ -->
-    <div class="right-content">
-        <div class="container">
-            <div class="hero">
-                <h1>🚗 АвтоКаталог</h1>
-                <p>Код страны (3 буквы) внутри кнопки · Слева — расшифровка</p>
+    
+    <!-- ==================== ВКЛАДКА АВТОКАТАЛОГА ==================== -->
+    <div id="autoTab" class="tab-content active">
+        <div class="main-layout">
+            <!-- Левая панель: расшифровка стран -->
+            <div class="legend-panel">
+                <div class="legend-title">
+                    <span>🌍</span> Коды стран
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">RUS</span>
+                    <span class="legend-flag">🇷🇺</span>
+                    <span class="legend-country">Россия</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">KOR</span>
+                    <span class="legend-flag">🇰🇷</span>
+                    <span class="legend-country">Южная Корея</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">JPN</span>
+                    <span class="legend-flag">🇯🇵</span>
+                    <span class="legend-country">Япония</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">DEU</span>
+                    <span class="legend-flag">🇩🇪</span>
+                    <span class="legend-country">Германия</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">USA</span>
+                    <span class="legend-flag">🇺🇸</span>
+                    <span class="legend-country">США</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">FRA</span>
+                    <span class="legend-flag">🇫🇷</span>
+                    <span class="legend-country">Франция</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">CHN</span>
+                    <span class="legend-flag">🇨🇳</span>
+                    <span class="legend-country">Китай</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">SWE</span>
+                    <span class="legend-flag">🇸🇪</span>
+                    <span class="legend-country">Швеция</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">ITA</span>
+                    <span class="legend-flag">🇮🇹</span>
+                    <span class="legend-country">Италия</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">CZE</span>
+                    <span class="legend-flag">🇨🇿</span>
+                    <span class="legend-country">Чехия</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-code">GBR</span>
+                    <span class="legend-flag">🇬🇧</span>
+                    <span class="legend-country">Великобритания</span>
+                </div>
             </div>
 
-            <div class="categories-toolbar" id="categoryToolbar"></div>
-            <div class="category-grid" id="dynamicGrid"></div>
-            <div class="footer-note">✓ Клик по автомобилю → копирование: «Марка Модель» (без смайликов)</div>
+            <!-- Правая часть: основной контент автокаталога -->
+            <div class="right-content">
+                <div class="container">
+                    <div class="hero">
+                        <h1>🚗 АвтоКаталог</h1>
+                        <p>Код страны (3 буквы) внутри кнопки · Слева — расшифровка</p>
+                    </div>
+
+                    <div class="categories-toolbar" id="categoryToolbar"></div>
+                    <div class="category-grid" id="dynamicGrid"></div>
+                    <div class="footer-note">✓ Клик по автомобилю → копирование: «Марка Модель» (без смайликов)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== ВКЛАДКА ГОРОДОВ РОССИИ ==================== -->
+    <div id="citiesTab" class="tab-content">
+        <div class="cities-wrapper">
+            <div class="hero-cities">
+                <h1><i class="fas fa-map-marked-alt" style="color: #2c7da0; margin-right: 8px;"></i> Все города России</h1>
+            </div>
+            <div class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Поиск по городу или региону..." autocomplete="off">
+                    <button class="clear-search" id="clearSearchBtn"><i class="fas fa-times-circle"></i></button>
+                </div>
+                <div class="search-stats" id="searchStats"></div>
+            </div>
+            <div class="districts-grid" id="districtsGrid">Загрузка городов...</div>
+            <div class="footer-note"><i class="fas fa-copy"></i> Нажмите на любой город — название скопируется</div>
         </div>
     </div>
 </div>
@@ -445,6 +819,7 @@
 <div id="copyToast" class="copy-toast">✓ Скопировано:</div>
 
 <script>
+    // ==================== ОБЩИЕ ФУНКЦИИ ====================
     const copyToast = document.getElementById('copyToast');
     
     function showCopyMessage(text) {
@@ -468,8 +843,28 @@
         }
     }
 
-    // Функция получения трёхбуквенного кода страны по бренду
+    // Переключение между вкладками
+    function switchTab(tabName) {
+        const autoTab = document.getElementById('autoTab');
+        const citiesTab = document.getElementById('citiesTab');
+        const btns = document.querySelectorAll('.tab-btn');
+        
+        if (tabName === 'auto') {
+            autoTab.classList.add('active');
+            citiesTab.classList.remove('active');
+            btns[0].classList.add('active');
+            btns[1].classList.remove('active');
+        } else {
+            autoTab.classList.remove('active');
+            citiesTab.classList.add('active');
+            btns[0].classList.remove('active');
+            btns[1].classList.add('active');
+        }
+    }
+
+    // ==================== АВТОКАТАЛОГ (полная версия из вашего кода) ====================
     function getCountryCode(brand) {
+        const brandLower = brand.toLowerCase();
         const map = {
             'lada': 'RUS',
             'LADA': 'RUS',
@@ -482,8 +877,10 @@
             'jeep': 'USA',
             'bmw': 'DEU',
             'vw': 'DEU',
+            'volkswagen': 'DEU',
             'audi': 'DEU',
             'mercedes': 'DEU',
+            'mercedes-benz': 'DEU',
             'toyota': 'JPN',
             'honda': 'JPN',
             'nissan': 'JPN',
@@ -501,7 +898,7 @@
             'jaguar': 'GBR',
             'land rover': 'GBR'
         };
-        return map[brand.toLowerCase()] || '???';
+        return map[brandLower] || '???';
     }
 
     // СПИСОК МОДЕЛЕЙ LADA, КОТОРЫЕ ОТСУТСТВУЮТ В КАТАЛОГЕ (БУДУТ КРАСНЫМИ)
@@ -741,7 +1138,8 @@
             btn.innerHTML = `${car.brand} ${car.model} <span class="country-badge">${countryCode}</span>`;
             
             btn.classList.add('car-btn');
-            btn.setAttribute('data-brand', car.brand.toLowerCase());
+            const brandAttr = car.brand.toLowerCase();
+            btn.setAttribute('data-brand', brandAttr);
             
             if (car.isMissing === true || missingLadaModels.has(car.model)) {
                 btn.classList.add('missing-lada');
@@ -780,8 +1178,297 @@
         window.scrollTo({ top: currentScroll, behavior: 'auto' });
     }
 
-    renderToolbar();
-    renderCardsByCategory(currentCategoryId);
+    // ==================== ГОРОДА РОССИИ (ПОЛНАЯ БАЗА) ====================
+    const citiesDatabase = {
+        "Центральный ФО": {
+            icon: "fas fa-landmark",
+            color: "#b48c5c",
+            regions: {
+                "Белгородская область": ["Белгород", "Старый Оскол", "Губкин", "Шебекино", "Алексеевка", "Валуйки", "Новый Оскол", "Строитель", "Бирюч", "Грайворон", "Короча"],
+                "Брянская область": ["Брянск", "Клинцы", "Новозыбков", "Дятьково", "Унеча", "Стародуб", "Карачев", "Севск", "Жуковка", "Почеп", "Трубчевск", "Сельцо", "Фокино", "Мглин", "Сураж", "Злынка"],
+                "Владимирская область": ["Владимир", "Ковров", "Муром", "Александров", "Гусь-Хрустальный", "Кольчугино", "Вязники", "Киржач", "Собинка", "Покров", "Юрьев-Польский", "Суздаль", "Камешково", "Лакинск", "Меленки", "Петушки", "Карабаново", "Струнино", "Радужный"],
+                "Воронежская область": ["Воронеж", "Борисоглебск", "Россошь", "Лиски", "Острогожск", "Нововоронеж", "Семилуки", "Павловск", "Калач", "Бутурлиновка", "Бобров", "Эртиль", "Поворино", "Богучар", "Анна"],
+                "Ивановская область": ["Иваново", "Кинешма", "Шуя", "Вичуга", "Фурманов", "Тейково", "Кохма", "Родники", "Приволжск", "Южа", "Заволжск", "Пучеж", "Комсомольск", "Гаврилов Посад", "Юрьевец", "Плёс", "Наволоки"],
+                "Калужская область": ["Калуга", "Обнинск", "Козельск", "Людиново", "Киров", "Малоярославец", "Балабаново", "Кондрово", "Сухиничи", "Жиздра", "Боровск", "Таруса", "Медынь", "Жуков", "Мосальск", "Спас-Деменск"],
+                "Костромская область": ["Кострома", "Буй", "Галич", "Шарья", "Нерехта", "Волгореченск", "Мантурово", "Нея", "Солигалич", "Чухлома", "Макарьев", "Кологрив"],
+                "Курская область": ["Курск", "Железногорск", "Курчатов", "Льгов", "Рыльск", "Щигры", "Обоянь", "Суджа", "Фатеж", "Дмитриев", "Тим"],
+                "Липецкая область": ["Липецк", "Елец", "Грязи", "Данков", "Лебедянь", "Задонск", "Усмань", "Чаплыгин"],
+                "Московская область": ["Балашиха", "Химки", "Подольск", "Королёв", "Мытищи", "Люберцы", "Красногорск", "Электросталь", "Коломна", "Одинцово", "Домодедово", "Серпухов", "Щёлково", "Раменское", "Долгопрудный", "Реутов", "Пушкино", "Жуковский", "Сергиев Посад", "Ногинск", "Орехово-Зуево", "Видное", "Клин", "Ивантеевка", "Чехов", "Дмитров", "Ступино", "Павловский Посад", "Наро-Фоминск", "Фрязино", "Лыткарино", "Дзержинский", "Лобня", "Кашира", "Протвино", "Истра", "Луховицы", "Солнечногорск", "Климовск", "Егорьевск", "Можайск", "Воскресенск", "Зарайск", "Волоколамск", "Бронницы", "Рошаль", "Пущино", "Шатура", "Куровское", "Краснознаменск", "Талдом", "Лосино-Петровский", "Дубна", "Электрогорск", "Черноголовка", "Верея", "Высоковск", "Котельники", "Ликино-Дулёво", "Щербинка", "Дрезна", "Красноармейск", "Пересвет", "Старая Купавна", "Юбилейный", "Московский", "Голицыно", "Апрелевка", "Звенигород", "Красково", "Малаховка"],
+                "Орловская область": ["Орёл", "Ливны", "Мценск", "Болхов", "Дмитровск", "Малоархангельск", "Новосиль"],
+                "Рязанская область": ["Рязань", "Касимов", "Скопин", "Сасово", "Ряжск", "Шацк", "Новомичуринск", "Кораблино", "Спас-Клепики", "Спасск-Рязанский"],
+                "Смоленская область": ["Смоленск", "Вязьма", "Рославль", "Ярцево", "Сафоново", "Десногорск", "Гагарин", "Дорогобуж", "Ельня", "Велиж", "Рудня", "Сычёвка", "Демидов", "Починок"],
+                "Тамбовская область": ["Тамбов", "Мичуринск", "Рассказово", "Моршанск", "Котовск", "Уварово", "Кирсанов", "Жердевка"],
+                "Тверская область": ["Тверь", "Ржев", "Вышний Волочёк", "Торжок", "Кимры", "Конаково", "Бежецк", "Удомля", "Осташков", "Бологое", "Кашин", "Нелидово", "Лихославль", "Кувшиново", "Красный Холм", "Зубцов", "Старица", "Весьегонск", "Андреаполь", "Западная Двина", "Торопец", "Белый"],
+                "Тульская область": ["Тула", "Новомосковск", "Алексин", "Ефремов", "Узловая", "Донской", "Кимовск", "Щёкино", "Богородицк", "Суворов", "Плавск", "Венёв", "Ясногорск", "Киреевск", "Советск", "Чекалин"],
+                "Ярославская область": ["Ярославль", "Рыбинск", "Переславль-Залесский", "Тутаев", "Углич", "Ростов", "Гаврилов-Ям", "Данилов", "Пошехонье", "Мышкин", "Любим"],
+                "Москва": ["Москва", "Зеленоград", "Троицк"]
+            }
+        },
+        "Северо-Западный ФО": {
+            icon: "fas fa-water",
+            color: "#3c9bc7",
+            regions: {
+                "Республика Карелия": ["Петрозаводск", "Кондопога", "Костомукша", "Сегежа", "Сортавала", "Медвежьегорск", "Кемь", "Питкяранта", "Беломорск", "Суоярви", "Олонец", "Лахденпохья", "Пудож"],
+                "Республика Коми": ["Сыктывкар", "Ухта", "Воркута", "Печора", "Усинск", "Инта", "Сосногорск", "Микунь", "Емва", "Вуктыл"],
+                "Архангельская область": ["Архангельск", "Северодвинск", "Котлас", "Новодвинск", "Коряжма", "Мирный", "Вельск", "Няндома", "Онега", "Каргополь", "Шенкурск", "Мезень", "Сольвычегодск"],
+                "Вологодская область": ["Вологда", "Череповец", "Великий Устюг", "Сокол", "Грязовец", "Тотьма", "Бабаево", "Вытегра", "Никольск", "Устюжна", "Кириллов", "Кадников", "Харовск", "Белозерск", "Красавино"],
+                "Калининградская область": ["Калининград", "Советск", "Черняховск", "Балтийск", "Гусев", "Светлый", "Светлогорск", "Гурьевск", "Зеленоградск", "Багратионовск", "Неман", "Мамоново", "Правдинск", "Пионерский", "Ладушкин", "Озёрск", "Нестеров", "Краснознаменск", "Славск", "Полесск"],
+                "Ленинградская область": ["Гатчина", "Выборг", "Тихвин", "Кингисепп", "Всеволожск", "Сосновый Бор", "Луга", "Волхов", "Кириши", "Приозерск", "Подпорожье", "Сланцы", "Бокситогорск", "Шлиссельбург", "Лодейное Поле", "Отрадное", "Тосно", "Никольское", "Коммунар", "Пикалёво", "Ивангород", "Сертолово", "Кудрово", "Мурино"],
+                "Мурманская область": ["Мурманск", "Апатиты", "Североморск", "Мончегорск", "Кандалакша", "Кировск", "Оленегорск", "Ковдор", "Заполярный", "Полярный", "Полярные Зори", "Никель", "Заозёрск", "Снежногорск", "Гаджиево", "Островной"],
+                "Новгородская область": ["Великий Новгород", "Боровичи", "Старая Русса", "Валдай", "Чудово", "Пестово", "Малая Вишера", "Окуловка", "Сольцы", "Холм"],
+                "Псковская область": ["Псков", "Великие Луки", "Остров", "Невель", "Печоры", "Опочка", "Дно", "Новоржев", "Порхов", "Себеж", "Пыталово", "Пушкинские Горы", "Гдов"],
+                "Ненецкий АО": ["Нарьян-Мар"],
+                "Санкт-Петербург": ["Санкт-Петербург", "Колпино", "Пушкин", "Петродворец", "Кронштадт", "Павловск", "Сестрорецк", "Зеленогорск"]
+            }
+        },
+        "Приволжский ФО": {
+            icon: "fas fa-volcano",
+            color: "#5a9e6b",
+            regions: {
+                "Республика Башкортостан": ["Уфа", "Стерлитамак", "Салават", "Нефтекамск", "Октябрьский", "Туймазы", "Ишимбай", "Кумертау", "Мелеуз", "Белорецк", "Бирск", "Сибай", "Благовещенск", "Дюртюли", "Янаул", "Давлеканово", "Баймак", "Агидель", "Учалы", "Белебей", "Чишмы", "Раевский", "Приютово"],
+                "Республика Марий Эл": ["Йошкар-Ола", "Волжск", "Козьмодемьянск", "Звенигово"],
+                "Республика Мордовия": ["Саранск", "Рузаевка", "Ковылкино", "Краснослободск", "Ардатов", "Темников", "Инсар"],
+                "Республика Татарстан": ["Казань", "Набережные Челны", "Нижнекамск", "Альметьевск", "Зеленодольск", "Бугульма", "Елабуга", "Лениногорск", "Чистополь", "Заинск", "Азнакаево", "Нурлат", "Менделеевск", "Бавлы", "Агрыз", "Мензелинск", "Арск", "Кукмор", "Лаишево", "Мамадыш", "Болгар", "Тетюши"],
+                "Удмуртская Республика": ["Ижевск", "Сарапул", "Глазов", "Воткинск", "Можга", "Камбарка"],
+                "Чувашская Республика": ["Чебоксары", "Новочебоксарск", "Канаш", "Алатырь", "Шумерля", "Цивильск", "Козловка", "Мариинский Посад", "Ядрин"],
+                "Пермский край": ["Пермь", "Березники", "Соликамск", "Чайковский", "Кунгур", "Лысьва", "Краснокамск", "Чусовой", "Добрянка", "Чернушка", "Кудымкар", "Оса", "Верещагино", "Губаха", "Очёр", "Нытва", "Гремячинск", "Александровск", "Кизел", "Чердынь", "Ильинский", "Оханск", "Усолье"],
+                "Кировская область": ["Киров", "Кирово-Чепецк", "Слободской", "Вятские Поляны", "Котельнич", "Омутнинск", "Яранск", "Советск", "Зуевка", "Кирс", "Малмыж", "Уржум", "Белая Холуница", "Нолинск", "Луза", "Мураши"],
+                "Нижегородская область": ["Нижний Новгород", "Арзамас", "Дзержинск", "Саров", "Бор", "Кстово", "Павлово", "Выкса", "Балахна", "Заволжье", "Богородск", "Семёнов", "Лысково", "Шахунья", "Сергач", "Володарск", "Перевоз", "Урень", "Ветлуга", "Чкаловск", "Горбатов", "Княгинино", "Лукоянов", "Навашино"],
+                "Оренбургская область": ["Оренбург", "Орск", "Бузулук", "Новотроицк", "Гай", "Соль-Илецк", "Медногорск", "Бугуруслан", "Абдулино", "Сорочинск", "Кувандык", "Ясный"],
+                "Пензенская область": ["Пенза", "Кузнецк", "Заречный", "Каменка", "Сердобск", "Нижний Ломов", "Городище", "Белинский", "Спасск"],
+                "Самарская область": ["Самара", "Тольятти", "Сызрань", "Новокуйбышевск", "Чапаевск", "Отрадный", "Кинель", "Похвистнево", "Жигулёвск", "Октябрьск", "Нефтегорск"],
+                "Саратовская область": ["Саратов", "Энгельс", "Балаково", "Вольск", "Пугачёв", "Ртищево", "Красноармейск", "Маркс", "Петровск", "Аткарск", "Калининск", "Хвалынск", "Балашов", "Ершов", "Новоузенск"],
+                "Ульяновская область": ["Ульяновск", "Димитровград", "Инза", "Барыш", "Новоульяновск", "Сенгилей"]
+            }
+        },
+        "Южный ФО": {
+            icon: "fas fa-sun",
+            color: "#e9a35e",
+            regions: {
+                "Республика Адыгея": ["Майкоп", "Адыгейск"],
+                "Республика Калмыкия": ["Элиста", "Городовиковск", "Лагань"],
+                "Республика Крым": ["Симферополь", "Керчь", "Евпатория", "Феодосия", "Ялта", "Джанкой", "Алушта", "Бахчисарай", "Красноперекопск", "Саки", "Армянск", "Судак", "Белогорск", "Старый Крым", "Щёлкино", "Алупка"],
+                "Краснодарский край": ["Краснодар", "Сочи", "Новороссийск", "Армавир", "Анапа", "Геленджик", "Туапсе", "Кропоткин", "Славянск-на-Кубани", "Тихорецк", "Лабинск", "Крымск", "Тимашёвск", "Белореченск", "Ейск", "Апшеронск", "Усть-Лабинск", "Гулькевичи", "Курганинск", "Кореновск", "Приморско-Ахтарск", "Абинск", "Горячий Ключ", "Хадыженск", "Новокубанск", "Калининская"],
+                "Астраханская область": ["Астрахань", "Знаменск", "Ахтубинск", "Харабали", "Камызяк", "Нариманов"],
+                "Волгоградская область": ["Волгоград", "Волжский", "Камышин", "Михайловка", "Урюпинск", "Фролово", "Калач-на-Дону", "Котово", "Жирновск", "Суровикино", "Петров Вал", "Дубовка", "Николаевск", "Краснослободск", "Серафимович"],
+                "Ростовская область": ["Ростов-на-Дону", "Таганрог", "Шахты", "Новочеркасск", "Волгодонск", "Батайск", "Новошахтинск", "Каменск-Шахтинский", "Азов", "Гуково", "Сальск", "Донецк", "Миллерово", "Белая Калитва", "Аксай", "Красный Сулин", "Морозовск", "Константиновск", "Семикаракорск", "Зверево", "Пролетарск", "Цимлянск"],
+                "Севастополь": ["Севастополь", "Инкерман", "Балаклава", "Кача"]
+            }
+        },
+        "Северо-Кавказский ФО": {
+            icon: "fas fa-mountain",
+            color: "#c27e4a",
+            regions: {
+                "Республика Дагестан": ["Махачкала", "Дербент", "Хасавюрт", "Каспийск", "Буйнакск", "Кизляр", "Избербаш", "Дагестанские Огни", "Южно-Сухокумск", "Кизилюрт"],
+                "Республика Ингушетия": ["Магас", "Назрань", "Карабулак", "Малгобек"],
+                "Кабардино-Балкарская Республика": ["Нальчик", "Прохладный", "Баксан", "Нарткала", "Майский", "Терек", "Чегем", "Тырныауз"],
+                "Карачаево-Черкесская Республика": ["Черкесск", "Усть-Джегута", "Карачаевск", "Теберда"],
+                "Республика Северная Осетия — Алания": ["Владикавказ", "Моздок", "Беслан", "Алагир", "Ардон", "Дигора"],
+                "Чеченская Республика": ["Грозный", "Урус-Мартан", "Шали", "Аргун", "Гудермес", "Курчалой", "Автуры"],
+                "Ставропольский край": ["Ставрополь", "Пятигорск", "Кисловодск", "Невинномысск", "Ессентуки", "Минеральные Воды", "Георгиевск", "Будённовск", "Железноводск", "Светлоград", "Благодарный", "Изобильный", "Новоалександровск", "Зеленокумск", "Михайловск", "Лермонтов"]
+            }
+        },
+        "Уральский ФО": {
+            icon: "fas fa-industry",
+            color: "#678f5f",
+            regions: {
+                "Курганская область": ["Курган", "Шадринск", "Далматово", "Катайск", "Куртамыш", "Макушино", "Петухово", "Шумиха"],
+                "Свердловская область": ["Екатеринбург", "Нижний Тагил", "Каменск-Уральский", "Первоуральск", "Серов", "Новоуральск", "Асбест", "Ревда", "Верхняя Пышма", "Лесной", "Берёзовский", "Краснотурьинск", "Ирбит", "Кушва", "Красноуфимск", "Артёмовский", "Алапаевск", "Сухой Лог", "Реж", "Заречный", "Тавда", "Нижняя Салда", "Карпинск", "Качканар", "Нижняя Тура", "Верхняя Салда", "Среднеуральск", "Ивдель", "Богданович", "Североуральск", "Кировград", "Верхний Тагил", "Талица", "Невьянск", "Дегтярск", "Полевской", "Верхотурье", "Туринск", "Волчанск", "Нижние Серги", "Красноуральск", "Сысерть", "Арамиль", "Михайловск"],
+                "Тюменская область": ["Тюмень", "Тобольск", "Ишим", "Ялуторовск", "Заводоуковск"],
+                "Челябинская область": ["Челябинск", "Магнитогорск", "Златоуст", "Миасс", "Копейск", "Озёрск", "Троицк", "Снежинск", "Сатка", "Чебаркуль", "Верхний Уфалей", "Кыштым", "Коркино", "Южноуральск", "Аша", "Усть-Катав", "Пласт", "Катав-Ивановск", "Еманжелинск", "Бакал", "Карабаш", "Миньяр", "Нязепетровск", "Касли", "Сим", "Юрюзань"],
+                "Ханты-Мансийский АО": ["Ханты-Мансийск", "Сургут", "Нижневартовск", "Нефтеюганск", "Когалым", "Нягань", "Мегион", "Радужный", "Лангепас", "Пыть-Ях", "Урай", "Югорск", "Лянтор", "Белоярский", "Покачи"],
+                "Ямало-Ненецкий АО": ["Салехард", "Новый Уренгой", "Ноябрьск", "Лабытнанги", "Муравленко", "Губкинский", "Надым", "Тарко-Сале"]
+            }
+        },
+        "Сибирский ФО": {
+            icon: "fas fa-tree",
+            color: "#47997a",
+            regions: {
+                "Республика Алтай": ["Горно-Алтайск"],
+                "Республика Тыва": ["Кызыл", "Ак-Довурак", "Туран", "Чадан", "Шагонар"],
+                "Республика Хакасия": ["Абакан", "Черногорск", "Саяногорск", "Абаза", "Сорск"],
+                "Алтайский край": ["Барнаул", "Бийск", "Рубцовск", "Новоалтайск", "Заринск", "Камень-на-Оби", "Славгород", "Алейск", "Яровое", "Белокуриха"],
+                "Красноярский край": ["Красноярск", "Норильск", "Ачинск", "Канск", "Железногорск", "Минусинск", "Зеленогорск", "Лесосибирск", "Назарово", "Сосновоборск", "Шарыпово", "Боготол", "Бородино", "Дивногорск", "Игарка", "Дудинка", "Ужур", "Уяр", "Заозёрный", "Кодинск", "Иланский", "Артёмовск"],
+                "Иркутская область": ["Иркутск", "Ангарск", "Братск", "Усть-Илимск", "Усолье-Сибирское", "Черемхово", "Шелехов", "Саянск", "Зима", "Тулун", "Нижнеудинск", "Свирск", "Тайшет", "Вихоревка", "Бодайбо", "Железногорск-Илимский", "Киренск", "Бирюсинск", "Алзамай"],
+                "Кемеровская область": ["Кемерово", "Новокузнецк", "Прокопьевск", "Ленинск-Кузнецкий", "Киселёвск", "Юрга", "Анжеро-Судженск", "Белово", "Берёзовский", "Междуреченск", "Осинники", "Мариинск", "Тайга", "Гурьевск", "Топки", "Полысаево", "Калтан", "Мыски", "Салаир"],
+                "Новосибирская область": ["Новосибирск", "Бердск", "Искитим", "Куйбышев", "Барабинск", "Карасук", "Татарск", "Обь", "Черепаново", "Болотное", "Каргат", "Тогучин"],
+                "Омская область": ["Омск", "Тара", "Исилькуль", "Калачинск", "Называевск", "Тюкалинск"],
+                "Томская область": ["Томск", "Северск", "Стрежевой", "Кедровый", "Асино", "Колпашево"]
+            }
+        },
+        "Дальневосточный ФО": {
+            icon: "fas fa-whale",
+            color: "#4b8bb4",
+            regions: {
+                "Республика Саха (Якутия)": ["Якутск", "Нерюнгри", "Мирный", "Алдан", "Ленск", "Покровск", "Удачный", "Томмот", "Верхоянск", "Олёкминск", "Вилюйск", "Среднеколымск", "Нюрба"],
+                "Республика Бурятия": ["Улан-Удэ", "Северобайкальск", "Гусиноозёрск", "Кяхта", "Закаменск", "Бабушкин"],
+                "Забайкальский край": ["Чита", "Краснокаменск", "Борзя", "Петровск-Забайкальский", "Нерчинск", "Балей", "Могоча", "Хилок", "Шилка", "Сретенск"],
+                "Камчатский край": ["Петропавловск-Камчатский", "Елизово", "Вилючинск"],
+                "Приморский край": ["Владивосток", "Уссурийск", "Находка", "Артём", "Арсеньев", "Спасск-Дальний", "Большой Камень", "Партизанск", "Лесозаводск", "Дальнегорск", "Дальнереченск", "Фокино"],
+                "Хабаровский край": ["Хабаровск", "Комсомольск-на-Амуре", "Амурск", "Советская Гавань", "Николаевск-на-Амуре", "Бикин", "Вяземский"],
+                "Амурская область": ["Благовещенск", "Белогорск", "Свободный", "Тында", "Зея", "Райчихинск", "Шимановск", "Сковородино", "Завитинск"],
+                "Магаданская область": ["Магадан", "Сусуман"],
+                "Сахалинская область": ["Южно-Сахалинск", "Корсаков", "Холмск", "Оха", "Поронайск", "Долинск", "Невельск", "Анива", "Александровск-Сахалинский", "Углегорск", "Томари", "Макаров", "Курильск", "Северо-Курильск"],
+                "Еврейская АО": ["Биробиджан", "Облучье"],
+                "Чукотский АО": ["Анадырь", "Билибино", "Певек"]
+            }
+        }
+    };
+
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function highlightText(text, query) {
+        if (!query || query.trim() === "") return text;
+        const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+        return text.replace(regex, `<span class="highlight">$1</span>`);
+    }
+
+    function renderDistricts(searchQuery = "") {
+        const grid = document.getElementById("districtsGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        const lowerQuery = searchQuery.trim().toLowerCase();
+        let visibleCount = 0;
+
+        for (const [districtName, districtData] of Object.entries(citiesDatabase)) {
+            let hasMatch = false;
+            const processedRegions = [];
+
+            for (const [regionName, cities] of Object.entries(districtData.regions)) {
+                const regionMatch = lowerQuery === "" || regionName.toLowerCase().includes(lowerQuery);
+                const cityMatches = [];
+                let anyCityMatch = false;
+
+                for (const city of cities) {
+                    const cityMatch = lowerQuery !== "" && city.toLowerCase().includes(lowerQuery);
+                    if (cityMatch) anyCityMatch = true;
+                    cityMatches.push({ city, match: cityMatch });
+                }
+
+                if (regionMatch || anyCityMatch) {
+                    processedRegions.push({
+                        regionName,
+                        cities: cityMatches,
+                        anyCityMatch,
+                        cityCount: cities.length
+                    });
+                    hasMatch = true;
+                }
+            }
+
+            if (!hasMatch && lowerQuery !== "") continue;
+            visibleCount++;
+
+            const card = document.createElement("div");
+            card.className = "district-card";
+
+            const header = document.createElement("div");
+            header.className = "card-header";
+            header.style.borderBottomColor = districtData.color;
+            header.innerHTML = `
+                <i class="${districtData.icon}" style="color: ${districtData.color};"></i>
+                <h2>${highlightText(districtName, lowerQuery)}</h2>
+            `;
+            card.appendChild(header);
+
+            const regionsContainer = document.createElement("div");
+            regionsContainer.className = "regions-container";
+
+            for (const reg of processedRegions) {
+                const btn = document.createElement("div");
+                btn.className = "region-button";
+                btn.innerHTML = `
+                    <i class="fas fa-map-pin"></i> 
+                    ${highlightText(reg.regionName, lowerQuery)} 
+                    <span style="font-size:0.65rem;">(${reg.cityCount} гор.)</span>
+                `;
+
+                const citiesBlock = document.createElement("div");
+                citiesBlock.className = "cities-dropdown";
+
+                let citiesHtml = `<div class="cities-title"><i class="fas fa-city"></i> Города ${reg.regionName}:</div><div>`;
+                for (const { city, match } of reg.cities) {
+                    const cityHighlight = lowerQuery ? highlightText(city, lowerQuery) : city;
+                    citiesHtml += `
+                        <span class="city-badge" data-city="${city.replace(/"/g, '&quot;')}">
+                            <i class="fas fa-location-dot"></i> ${cityHighlight}
+                        </span>
+                    `;
+                }
+                citiesHtml += `</div>`;
+                citiesBlock.innerHTML = citiesHtml;
+
+                if (lowerQuery !== "" && reg.anyCityMatch) {
+                    citiesBlock.classList.add("force-open");
+                }
+
+                btn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (citiesBlock.classList.contains("force-open")) {
+                        citiesBlock.classList.remove("force-open");
+                        citiesBlock.classList.add("show");
+                    } else {
+                        citiesBlock.classList.toggle("show");
+                    }
+                });
+
+                const citySpans = citiesBlock.querySelectorAll(".city-badge");
+                citySpans.forEach(span => {
+                    span.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        const cityName = span.getAttribute("data-city");
+                        copyToClipboard(cityName);
+                    });
+                });
+
+                regionsContainer.appendChild(btn);
+                regionsContainer.appendChild(citiesBlock);
+            }
+
+            card.appendChild(regionsContainer);
+            grid.appendChild(card);
+        }
+
+        const statsDiv = document.getElementById("searchStats");
+        if (statsDiv) {
+            if (lowerQuery === "") {
+                statsDiv.innerHTML = `Нажмите на регион, затем на город для копирования.`;
+            } else {
+                statsDiv.innerHTML = `🔍 Найдено округов: ${visibleCount}. Города с "${searchQuery}" подсвечены золотым и автоматически раскрыты.`;
+            }
+            if (visibleCount === 0) {
+                statsDiv.innerHTML = `😕 Ничего не найдено. Попробуйте другой запрос.`;
+            }
+        }
+    }
+
+    // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+    document.addEventListener("DOMContentLoaded", () => {
+        renderToolbar();
+        renderCardsByCategory(currentCategoryId);
+        renderDistricts("");
+        
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) {
+            searchInput.addEventListener("input", (e) => {
+                renderDistricts(e.target.value);
+            });
+        }
+        
+        const clearBtn = document.getElementById("clearSearchBtn");
+        if (clearBtn) {
+            clearBtn.addEventListener("click", () => {
+                if (searchInput) searchInput.value = "";
+                renderDistricts("");
+            });
+        }
+    });
+
+    // Делаем функции глобальными для onclick
+    window.switchTab = switchTab;
+    window.copyToClipboard = copyToClipboard;
 </script>
 </body>
 </html>
